@@ -4,7 +4,7 @@ const Click = require('../models/Click');
 // @desc    Get detailed private analytics for a short URL
 // @route   GET /api/v1/analytics/:shortCode
 // @access  Private
-exports.getUrlAnalytics = async (req, res) => {
+exports.getUrlAnalytics = async (req, res, next) => {
   try {
     const { shortCode } = req.params;
 
@@ -82,18 +82,14 @@ exports.getUrlAnalytics = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get Analytics Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error retrieving analytics data',
-    });
+    next(error);
   }
 };
 
 // @desc    Get public (non-sensitive) stats for a short URL
 // @route   GET /api/v1/public/:shortCode
 // @access  Public (no auth)
-exports.getPublicStats = async (req, res) => {
+exports.getPublicStats = async (req, res, next) => {
   try {
     const { shortCode } = req.params;
 
@@ -158,11 +154,7 @@ exports.getPublicStats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get Public Stats Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error retrieving public stats',
-    });
+    next(error);
   }
 };
 

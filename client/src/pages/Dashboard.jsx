@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { urlAPI } from '../services/api';
 import { useToast } from '../components/Toast';
+import { EmptyState, ErrorState } from '../components/UIStates';
 import './Dashboard.css';
 
 // ── Skeleton loader for URL table rows ──────────────────────────────────────
@@ -224,18 +225,13 @@ const Dashboard = () => {
               </table>
             </div>
           ) : error ? (
-            <div className="empty-state">
-              <div className="empty-state-icon">⚠️</div>
-              <h4>Something went wrong</h4>
-              <p>{error}</p>
-              <button onClick={fetchUrls} className="btn btn-secondary btn-sm">Retry</button>
-            </div>
+            <ErrorState error={error} onRetry={fetchUrls} />
           ) : urls.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-state-icon">🔗</div>
-              <h4>No links yet</h4>
-              <p>Create your first short URL to get started.</p>
-            </div>
+            <EmptyState 
+              title="No links yet" 
+              message="Create your first short URL to get started." 
+              icon="🔗" 
+            />
           ) : (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>

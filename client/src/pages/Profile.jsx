@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { urlAPI } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import { LoadingState, ErrorState } from '../components/UIStates';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -82,17 +83,9 @@ const Profile = () => {
             <h3 style={{ marginBottom: 'var(--space-4)' }}>Link Statistics</h3>
             
             {loading ? (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
-                {[1,2,3,4].map(i => (
-                  <div key={i} className="card" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
-                    <div className="skeleton" style={{ width: 32, height: 32, borderRadius: '50%', margin: '0 auto var(--space-3)' }} />
-                    <div className="skeleton skeleton-text" style={{ width: '50%', margin: '0 auto var(--space-2)' }} />
-                    <div className="skeleton skeleton-text" style={{ width: '40%', margin: '0 auto', height: '0.75rem' }} />
-                  </div>
-                ))}
-              </div>
+              <LoadingState message="Loading statistics..." />
             ) : error ? (
-              <div className="badge badge-error">{error}</div>
+              <ErrorState title="Stats Unavailable" error={error} />
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                 <div className="stat-card card">

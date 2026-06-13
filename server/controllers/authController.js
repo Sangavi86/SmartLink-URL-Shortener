@@ -11,7 +11,7 @@ const generateToken = (userId) => {
 // @desc    Register a new user
 // @route   POST /api/v1/auth/register
 // @access  Public
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
@@ -60,18 +60,14 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Registration Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error during registration',
-    });
+    next(error);
   }
 };
 
 // @desc    Login user
 // @route   POST /api/v1/auth/login
 // @access  Public
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -115,29 +111,21 @@ exports.login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Login Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error during login',
-    });
+    next(error);
   }
 };
 
 // @desc    Get current logged in user
 // @route   GET /api/v1/auth/me
 // @access  Private
-exports.getMe = async (req, res) => {
+exports.getMe = async (req, res, next) => {
   try {
     return res.status(200).json({
       success: true,
       user: req.user,
     });
   } catch (error) {
-    console.error('Get Me Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error retrieving user details',
-    });
+    next(error);
   }
 };
 

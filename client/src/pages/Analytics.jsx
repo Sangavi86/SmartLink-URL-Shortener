@@ -5,6 +5,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
 } from 'recharts';
+import { LoadingState, ErrorState } from '../components/UIStates';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
@@ -33,23 +34,7 @@ const Analytics = () => {
     return (
       <main className="page-wrapper page-enter">
         <div className="container">
-          <div className="dashboard-header animate-fade-in">
-            <div className="skeleton skeleton-text" style={{ width: '40%', height: '2.25rem', marginBottom: 'var(--space-2)' }} />
-            <div className="skeleton skeleton-text" style={{ width: '60%' }} />
-          </div>
-          <div className="stats-grid animate-fade-in" style={{ marginBottom: 'var(--space-8)', animationDelay: '0.05s' }}>
-            {[1,2,3,4].map(i => (
-              <div key={i} className="card" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
-                <div className="skeleton" style={{ width: 40, height: 40, borderRadius: '50%', margin: '0 auto var(--space-3)' }} />
-                <div className="skeleton skeleton-text" style={{ width: '60%', margin: '0 auto var(--space-2)' }} />
-                <div className="skeleton skeleton-text" style={{ width: '40%', margin: '0 auto', height: '0.75rem' }} />
-              </div>
-            ))}
-          </div>
-          <div className="card animate-fade-in" style={{ height: 350, animationDelay: '0.1s' }}>
-            <div className="skeleton skeleton-text" style={{ width: '30%', marginBottom: 'var(--space-4)' }} />
-            <div className="skeleton" style={{ width: '100%', height: 280 }} />
-          </div>
+          <LoadingState message="Loading analytics..." />
         </div>
       </main>
     );
@@ -59,11 +44,12 @@ const Analytics = () => {
     return (
       <main className="page-wrapper page-enter">
         <div className="container">
-          <div className="empty-state">
-            <div className="empty-state-icon">📉</div>
-            <h4>Analytics Unavailable</h4>
-            <p>{error || 'No analytics found for this link.'}</p>
-            <Link to="/dashboard" className="btn btn-secondary" style={{ marginTop: 'var(--space-4)' }}>← Back to Dashboard</Link>
+          <ErrorState 
+            title="Analytics Unavailable" 
+            error={error || 'No analytics found for this link.'} 
+          />
+          <div className="text-center" style={{ marginTop: 'var(--space-4)' }}>
+            <Link to="/dashboard" className="btn btn-secondary">← Back to Dashboard</Link>
           </div>
         </div>
       </main>

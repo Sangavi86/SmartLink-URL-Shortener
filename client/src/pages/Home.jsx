@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { urlAPI } from '../services/api';
 import { useToast } from '../components/Toast';
+import { EmptyState } from '../components/UIStates';
 import './Home.css';
 
 const Home = () => {
@@ -135,24 +136,27 @@ const Home = () => {
       {!user && (
         <section className="section bg-light" style={{ backgroundColor: 'var(--color-bg-card)', padding: 'var(--space-8) 0' }}>
           <div className="container text-center">
-            <h2 style={{ marginBottom: 'var(--space-4)' }}>New to SmartLink?</h2>
-            <p className="text-muted" style={{ maxWidth: '600px', margin: '0 auto var(--space-6)' }}>
-              Get started in seconds. SmartLink provides everything you need to manage your links professionally.
-            </p>
-            <div className="flex justify-center gap-6" style={{ flexWrap: 'wrap', maxWidth: '800px', margin: '0 auto' }}>
-               <div className="text-center" style={{ flex: 1, minWidth: '200px' }}>
-                 <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>1️⃣</div>
-                 <strong>Create a short URL</strong>
-               </div>
-               <div className="text-center" style={{ flex: 1, minWidth: '200px' }}>
-                 <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>2️⃣</div>
-                 <strong>Share it anywhere</strong>
-               </div>
-               <div className="text-center" style={{ flex: 1, minWidth: '200px' }}>
-                 <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>3️⃣</div>
-                 <strong>Watch analytics grow</strong>
-               </div>
-            </div>
+            <EmptyState 
+              title="New to SmartLink?"
+              message="Get started in seconds. SmartLink provides everything you need to manage your links professionally."
+              icon="👋"
+              action={
+                <div className="flex justify-center gap-6" style={{ flexWrap: 'wrap', maxWidth: '800px', margin: '0 auto' }}>
+                   <div className="text-center" style={{ flex: 1, minWidth: '200px' }}>
+                     <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>1️⃣</div>
+                     <strong>Create a short URL</strong>
+                   </div>
+                   <div className="text-center" style={{ flex: 1, minWidth: '200px' }}>
+                     <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>2️⃣</div>
+                     <strong>Share it anywhere</strong>
+                   </div>
+                   <div className="text-center" style={{ flex: 1, minWidth: '200px' }}>
+                     <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>3️⃣</div>
+                     <strong>Watch analytics grow</strong>
+                   </div>
+                </div>
+              }
+            />
           </div>
         </section>
       )}

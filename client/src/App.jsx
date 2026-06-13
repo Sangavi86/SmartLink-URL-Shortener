@@ -13,14 +13,17 @@ import NotFound from './pages/NotFound';
 import { useAuth } from './hooks/useAuth';
 import { ToastProvider } from './components/Toast';
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 function App() {
   const { user, logout } = useAuth();
 
   return (
     <ToastProvider>
       <Router>
-        <Navbar user={user} onLogout={logout} />
-        <Routes>
+        <ErrorBoundary>
+          <Navbar user={user} onLogout={logout} />
+          <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -33,11 +36,11 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/analytics/:shortCode" element={<Analytics />} />
           </Route>
-
           {/* Catch All */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
+        </ErrorBoundary>
       </Router>
     </ToastProvider>
   );

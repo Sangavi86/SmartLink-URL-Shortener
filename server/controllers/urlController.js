@@ -54,7 +54,7 @@ const validateUrl = (urlStr) => {
 // @desc    Create a short URL
 // @route   POST /api/v1/urls
 // @access  Private
-exports.createShortUrl = async (req, res) => {
+exports.createShortUrl = async (req, res, next) => {
   try {
     const { originalUrl, customAlias, title, expiryDate } = req.body;
 
@@ -169,18 +169,14 @@ exports.createShortUrl = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create URL Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error during short URL creation',
-    });
+    next(error);
   }
 };
 
 // @desc    Redirect to original URL
 // @route   GET /:shortCode
 // @access  Public
-exports.redirectToUrl = async (req, res) => {
+exports.redirectToUrl = async (req, res, next) => {
   try {
     const { shortCode } = req.params;
 
@@ -230,18 +226,14 @@ exports.redirectToUrl = async (req, res) => {
     return res.redirect(urlDoc.originalUrl);
 
   } catch (error) {
-    console.error('Redirect Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error during redirection',
-    });
+    next(error);
   }
 };
 
 // @desc    Get user's URLs
 // @route   GET /api/v1/urls
 // @access  Private
-exports.getUserUrls = async (req, res) => {
+exports.getUserUrls = async (req, res, next) => {
   try {
     const urls = await URLModel.find({ userId: req.user._id }).sort({ createdAt: -1 });
     return res.status(200).json({
@@ -250,18 +242,14 @@ exports.getUserUrls = async (req, res) => {
       data: urls,
     });
   } catch (error) {
-    console.error('Get User URLs Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error retrieving URLs',
-    });
+    next(error);
   }
 };
 
 // @desc    Update a URL
 // @route   PUT /api/v1/urls/:id
 // @access  Private
-exports.updateUrl = async (req, res) => {
+exports.updateUrl = async (req, res, next) => {
   try {
     const { originalUrl, title, expiryDate } = req.body;
     const { id } = req.params;
@@ -338,18 +326,14 @@ exports.updateUrl = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update URL Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error during URL update',
-    });
+    next(error);
   }
 };
 
 // @desc    Delete a URL
 // @route   DELETE /api/v1/urls/:id
 // @access  Private
-exports.deleteUrl = async (req, res) => {
+exports.deleteUrl = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -378,17 +362,13 @@ exports.deleteUrl = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete URL Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error during URL deletion',
-    });
+    next(error);
   }
 };
 // @desc    Bulk upload URLs via CSV
 // @route   POST /api/v1/urls/bulk-upload
 // @access  Private
-exports.bulkUploadUrls = async (req, res) => {
+exports.bulkUploadUrls = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'Please upload a CSV file' });
@@ -476,12 +456,11 @@ exports.bulkUploadUrls = async (req, res) => {
         });
       })
       .on('error', (error) => {
-        return res.status(500).json({ success: false, error: 'Error parsing CSV file' });
+        next(error);
       });
 
   } catch (error) {
-    console.error('Bulk Upload Error:', error.message);
-    return res.status(500).json({ success: false, error: 'Server Error during bulk upload' });
+    next(error);
   }
 };
 
