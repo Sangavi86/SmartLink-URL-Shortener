@@ -247,13 +247,13 @@ const Dashboard = () => {
                     <tr key={url._id} className="url-table-row">
                       <td style={{ padding: 'var(--space-3)' }}>
                         <a
-                          href={`http://localhost:5001/${url.shortCode}`}
+                          href={`https://smartlink-url-shortener.onrender.com/${url.shortCode}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-bold"
                           style={{ color: 'var(--color-primary-light)', textDecoration: 'none' }}
                         >
-                          {`http://localhost:5001/${url.shortCode}`}
+                          {`https://smartlink-url-shortener.onrender.com/${url.shortCode}`}
                         </a>
                         {url.customAlias && <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>alias: {url.customAlias}</div>}
                       </td>
