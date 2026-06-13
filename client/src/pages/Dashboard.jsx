@@ -9,7 +9,7 @@ const SkeletonRows = () => (
   <>
     {[1, 2, 3].map(i => (
       <tr key={i}>
-        {[1, 2, 3, 4, 5, 6].map(j => (
+        {[1, 2, 3, 4, 5, 6, 7, 8].map(j => (
           <td key={j} style={{ padding: 'var(--space-3)' }}>
             <div className="skeleton skeleton-text" style={{ width: j === 2 ? '80%' : '60%' }} />
           </td>
@@ -167,6 +167,7 @@ const Dashboard = () => {
                 onChange={handleFormChange}
                 required
               />
+              <p className="text-muted" style={{ fontSize: 'var(--font-size-xs)', marginTop: '2px' }}>Paste any valid URL to shorten.</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
               <div>
@@ -180,6 +181,7 @@ const Dashboard = () => {
                   value={formData.customAlias}
                   onChange={handleFormChange}
                 />
+                <p className="text-muted" style={{ fontSize: 'var(--font-size-xs)', marginTop: '2px' }}>Optional. Leave blank for auto-generation.</p>
               </div>
               <div>
                 <label className="form-label" htmlFor="expiryDate">Expiry Date (Optional)</label>
@@ -191,6 +193,7 @@ const Dashboard = () => {
                   value={formData.expiryDate}
                   onChange={handleFormChange}
                 />
+                <p className="text-muted" style={{ fontSize: 'var(--font-size-xs)', marginTop: '2px' }}>Optional. Link never expires if empty.</p>
               </div>
             </div>
             <div>
@@ -212,7 +215,7 @@ const Dashboard = () => {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    {['Short URL', 'Original URL', 'Clicks', 'Created', 'Expires', 'Actions'].map(h => (
+                    {['Short URL', 'Original URL', 'Clicks', 'Created', 'Expires', 'Status', 'QR', 'Actions'].map(h => (
                       <th key={h} style={{ padding: 'var(--space-3)', textAlign: 'left', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-xs)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</th>
                     ))}
                   </tr>
@@ -231,14 +234,14 @@ const Dashboard = () => {
             <div className="empty-state">
               <div className="empty-state-icon">🔗</div>
               <h4>No links yet</h4>
-              <p>Your shortened links will appear here. Create your first one above!</p>
+              <p>Create your first short URL to get started.</p>
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    {['Short URL', 'Original URL', 'Clicks', 'Created', 'Expires', 'Actions'].map(h => (
+                    {['Short URL', 'Original URL', 'Clicks', 'Created', 'Expires', 'Status', 'QR', 'Actions'].map(h => (
                       <th key={h} style={{ padding: 'var(--space-3)', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-xs)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</th>
                     ))}
                   </tr>
@@ -247,7 +250,15 @@ const Dashboard = () => {
                   {urls.map(url => (
                     <tr key={url._id} className="url-table-row">
                       <td style={{ padding: 'var(--space-3)' }}>
-                        <span className="font-bold" style={{ color: 'var(--color-primary-light)' }}>{url.shortCode}</span>
+                        <a
+                          href={`http://localhost:5001/${url.shortCode}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold"
+                          style={{ color: 'var(--color-primary-light)', textDecoration: 'none' }}
+                        >
+                          {`http://localhost:5001/${url.shortCode}`}
+                        </a>
                         {url.customAlias && <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>alias: {url.customAlias}</div>}
                       </td>
                       <td style={{ padding: 'var(--space-3)', maxWidth: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }} title={url.originalUrl}>
@@ -264,11 +275,21 @@ const Dashboard = () => {
                         }
                       </td>
                       <td style={{ padding: 'var(--space-3)' }}>
+                        {url.expiryDate && new Date(url.expiryDate) < new Date()
+                          ? <span className="badge badge-error" style={{ padding: '2px 8px', fontSize: 'var(--font-size-xs)' }}>Expired</span>
+                          : <span className="badge" style={{ padding: '2px 8px', fontSize: 'var(--font-size-xs)', background: 'var(--color-success, #22c55e)', color: '#fff', borderRadius: 'var(--radius-sm)' }}>Active</span>
+                        }
+                      </td>
+                      <td style={{ padding: 'var(--space-3)', textAlign: 'center' }}>
+                        {url.qrCode ? '✅' : '➖'}
+                      </td>
+                      <td style={{ padding: 'var(--space-3)' }}>
                         <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
-                          <Link to={`/analytics/${url.shortCode}`} className="btn btn-ghost btn-sm" title="Analytics">📊</Link>
-                          <button onClick={() => viewQrCode(url)} className="btn btn-ghost btn-sm" title="View QR Code">📷</button>
-                          <button onClick={() => copyToClipboard(url.shortCode)} className="btn btn-ghost btn-sm" title="Copy short URL">📋</button>
-                          <button onClick={() => handleDelete(url._id)} className="btn btn-ghost btn-sm" title="Delete" style={{ color: 'var(--color-error)' }}>🗑️</button>
+                          <Link to={`/analytics/${url.shortCode}`} className="btn btn-ghost btn-sm" title="Analytics" aria-label="View analytics">📊</Link>
+                          <button onClick={() => viewQrCode(url)} className="btn btn-ghost btn-sm" title="View QR Code" aria-label="View QR code">📷</button>
+                          <button onClick={() => copyToClipboard(url.shortCode)} className="btn btn-ghost btn-sm" title="Copy short URL" aria-label="Copy short URL">📋</button>
+                          <a href={`http://localhost:5001/${url.shortCode}`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm" title="Open Link" aria-label="Open short URL">🔗</a>
+                          <button onClick={() => handleDelete(url._id)} className="btn btn-ghost btn-sm" title="Delete" aria-label="Delete link" style={{ color: 'var(--color-error)' }}>🗑️</button>
                         </div>
                       </td>
                     </tr>

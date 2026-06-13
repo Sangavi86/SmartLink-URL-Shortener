@@ -37,6 +37,11 @@ const Navbar = ({ user, onLogout }) => {
                 </Link>
               </li>
               <li>
+                <Link to="/dashboard" className={`nav-link`}>
+                  Analytics
+                </Link>
+              </li>
+              <li>
                 <Link to="/profile" className={`nav-link ${isActive('/profile') ? 'active' : ''}`}>
                   Profile
                 </Link>

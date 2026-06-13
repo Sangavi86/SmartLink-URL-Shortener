@@ -62,18 +62,18 @@ const Profile = () => {
           <div className="card animate-fade-in" style={{ animationDelay: '0.05s' }}>
             <h3 style={{ marginBottom: 'var(--space-4)' }}>Account Details</h3>
             <div className="form-group" style={{ marginBottom: 'var(--space-4)' }}>
-              <label className="form-label">Username</label>
-              <input type="text" className="input" value={user.username} readOnly disabled />
+              <label className="form-label" htmlFor="profileUsername">Username</label>
+              <input type="text" id="profileUsername" className="input" value={user.username} readOnly disabled aria-label="Username" />
             </div>
             
             <div className="form-group" style={{ marginBottom: 'var(--space-4)' }}>
-              <label className="form-label">Email</label>
-              <input type="email" className="input" value={user.email} readOnly disabled />
+              <label className="form-label" htmlFor="profileEmail">Email</label>
+              <input type="email" id="profileEmail" className="input" value={user.email} readOnly disabled aria-label="Email" />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Member Since</label>
-              <input type="text" className="input" value={new Date(user.createdAt).toLocaleDateString()} readOnly disabled />
+              <label className="form-label" htmlFor="profileDate">Member Since</label>
+              <input type="text" id="profileDate" className="input" value={new Date(user.createdAt).toLocaleDateString()} readOnly disabled aria-label="Member Since" />
             </div>
           </div>
 
@@ -82,7 +82,15 @@ const Profile = () => {
             <h3 style={{ marginBottom: 'var(--space-4)' }}>Link Statistics</h3>
             
             {loading ? (
-              <div className="text-center" style={{ padding: 'var(--space-4)' }}>Loading stats...</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="card" style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
+                    <div className="skeleton" style={{ width: 32, height: 32, borderRadius: '50%', margin: '0 auto var(--space-3)' }} />
+                    <div className="skeleton skeleton-text" style={{ width: '50%', margin: '0 auto var(--space-2)' }} />
+                    <div className="skeleton skeleton-text" style={{ width: '40%', margin: '0 auto', height: '0.75rem' }} />
+                  </div>
+                ))}
+              </div>
             ) : error ? (
               <div className="badge badge-error">{error}</div>
             ) : (

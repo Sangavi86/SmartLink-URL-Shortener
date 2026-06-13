@@ -57,13 +57,14 @@ const Analytics = () => {
 
   if (error || !data) {
     return (
-      <main className="page-wrapper">
-        <div className="container text-center" style={{ marginTop: 'var(--space-12)' }}>
-          <div className="badge badge-error" style={{ display: 'inline-block', marginBottom: 'var(--space-4)' }}>
-            {error || 'Analytics not found'}
+      <main className="page-wrapper page-enter">
+        <div className="container">
+          <div className="empty-state">
+            <div className="empty-state-icon">📉</div>
+            <h4>Analytics Unavailable</h4>
+            <p>{error || 'No analytics found for this link.'}</p>
+            <Link to="/dashboard" className="btn btn-secondary" style={{ marginTop: 'var(--space-4)' }}>← Back to Dashboard</Link>
           </div>
-          <br />
-          <Link to="/dashboard" className="btn btn-secondary">← Back to Dashboard</Link>
         </div>
       </main>
     );
