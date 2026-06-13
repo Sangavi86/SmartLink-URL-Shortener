@@ -1,7 +1,20 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const connectDB = require('./config/db');
+const dns = require("dns");
+
+// Force Node.js to use public DNS servers
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+
+const connectDB = require("./config/db");
+
+const authRoutes = require("./routes/authRoutes");
+const urlRoutes = require("./routes/urlRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const publicRoutes = require("./routes/publicRoutes");
+const { redirectToUrl } = require("./controllers/urlController");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
@@ -13,37 +26,30 @@ app.use(express.json());
 connectDB();
 
 // Routes
-const authRoutes = require('./routes/authRoutes');
-const urlRoutes = require('./routes/urlRoutes');
-const analyticsRoutes = require('./routes/analyticsRoutes');
-const publicRoutes = require('./routes/publicRoutes');
-const { redirectToUrl } = require('./controllers/urlController');
-const errorHandler = require('./middleware/errorHandler');
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/urls", urlRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/public", publicRoutes);
 
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/urls', urlRoutes);
-app.use('/api/v1/analytics', analyticsRoutes);
-app.use('/api/v1/public', publicRoutes);
-
-// Health Check Route (must be above the /:shortCode catch-all)
-app.get('/api/health', (req, res) => {
+// Health Check Route
+app.get("/api/health", (req, res) => {
   res.status(200).json({
-    status: 'OK',
-    message: 'Server is running'
+    status: "OK",
+    message: "Server is running",
   });
 });
 
-// Short-code redirect (catch-all single-segment param)
-app.get('/:shortCode', redirectToUrl);
+// Short-code redirect
+app.get("/:shortCode", redirectToUrl);
 
-// 404 catch-all for unmatched routes
+// 404 handler
 app.use((req, res, next) => {
   const error = new Error(`Route not found: ${req.originalUrl}`);
   error.statusCode = 404;
   next(error);
 });
 
-// Centralized error handler (must be last)
+// Global Error Handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
