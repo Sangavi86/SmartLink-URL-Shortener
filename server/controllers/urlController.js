@@ -1,6 +1,9 @@
 const URLModel = require('../models/URL');
 const Click = require('../models/Click');
 const { nanoid } = require('nanoid');
+const qrcode = require('qrcode');
+const csv = require('csv-parser');
+const { Readable } = require('stream');
 
 // User agent parsing helper
 const parseUserAgent = (userAgentString) => {
@@ -136,6 +139,17 @@ exports.createShortUrl = async (req, res) => {
       }
     }
 
+    // Generate QR Code
+    let qrCodeDataUrl = null;
+    try {
+      const fullShortUrl = `${process.env.BASE_URL || 'http://localhost:5173'}/${shortCode}`; // Note: local test often uses 5173 for client or 5001 for server redirect. We'll use window.location.origin equivalent or just standard domain. Let's use relative path or configured base URL. Since this is just a redirect, 5001 is the actual redirect server.
+      const redirectUrl = `http://localhost:5001/${shortCode}`; 
+      // For production we'd use process.env.BASE_URL.
+      qrCodeDataUrl = await qrcode.toDataURL(redirectUrl);
+    } catch (qrErr) {
+      console.error('Failed to generate QR code:', qrErr.message);
+    }
+
     // Create URL document
     const urlDoc = await URLModel.create({
       userId: req.user._id,
@@ -144,6 +158,7 @@ exports.createShortUrl = async (req, res) => {
       customAlias: customAlias ? customAlias.trim() : undefined,
       title: title || undefined,
       expiryDate: parsedExpiry || undefined,
+      qrCode: qrCodeDataUrl,
       clickCount: 0
     });
 
@@ -370,5 +385,103 @@ exports.deleteUrl = async (req, res) => {
     });
   }
 };
+// @desc    Bulk upload URLs via CSV
+// @route   POST /api/v1/urls/bulk-upload
+// @access  Private
+exports.bulkUploadUrls = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Please upload a CSV file' });
+    }
 
+    const results = [];
+    const stream = Readable.from(req.file.buffer);
+
+    stream
+      .pipe(csv())
+      .on('data', (data) => results.push(data))
+      .on('end', async () => {
+        let successCount = 0;
+        let failedCount = 0;
+        const generatedUrls = [];
+
+        for (const row of results) {
+          // Find originalUrl case-insensitively from keys if necessary, or strictly require 'originalUrl'
+          const urlKey = Object.keys(row).find(k => k.trim().toLowerCase() === 'originalurl' || k.trim().toLowerCase() === 'url');
+          if (!urlKey) {
+            failedCount++;
+            continue;
+          }
+          
+          const originalUrl = row[urlKey]?.trim();
+          if (!originalUrl || !validateUrl(originalUrl)) {
+            failedCount++;
+            continue;
+          }
+
+          let title = '';
+          const titleKey = Object.keys(row).find(k => k.trim().toLowerCase() === 'title');
+          if (titleKey) title = row[titleKey].trim();
+
+          // Generate unique shortCode
+          let shortCode;
+          let isUnique = false;
+          let attempts = 0;
+          while (!isUnique && attempts < 10) {
+            shortCode = nanoid(7);
+            const codeExists = await URLModel.findOne({
+              $or: [{ shortCode }, { customAlias: shortCode }]
+            });
+            if (!codeExists) isUnique = true;
+            attempts++;
+          }
+
+          if (!isUnique) {
+            failedCount++;
+            continue;
+          }
+
+          let qrCodeDataUrl = null;
+          try {
+            const redirectUrl = `http://localhost:5001/${shortCode}`;
+            qrCodeDataUrl = await qrcode.toDataURL(redirectUrl);
+          } catch (e) {
+            // ignore qr failure
+          }
+
+          try {
+            const urlDoc = await URLModel.create({
+              userId: req.user._id,
+              originalUrl,
+              shortCode,
+              title: title || undefined,
+              qrCode: qrCodeDataUrl,
+              clickCount: 0
+            });
+            successCount++;
+            generatedUrls.push(urlDoc);
+          } catch (e) {
+            failedCount++;
+          }
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: {
+            totalRows: results.length,
+            successfulRows: successCount,
+            failedRows: failedCount,
+            urls: generatedUrls
+          }
+        });
+      })
+      .on('error', (error) => {
+        return res.status(500).json({ success: false, error: 'Error parsing CSV file' });
+      });
+
+  } catch (error) {
+    console.error('Bulk Upload Error:', error.message);
+    return res.status(500).json({ success: false, error: 'Server Error during bulk upload' });
+  }
+};
 

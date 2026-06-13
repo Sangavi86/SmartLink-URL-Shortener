@@ -48,6 +48,15 @@ export const urlAPI = {
   getAll: () => api.get('/urls'),
   update: (id, data) => api.put(`/urls/${id}`, data),
   remove: (id) => api.delete(`/urls/${id}`),
+  bulkUpload: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/urls/bulk-upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };
 
 // ── Analytics Endpoints ─────────────────────────

@@ -36,6 +36,7 @@ const urlSchema = new mongoose.Schema({
   },
   qrCode: {
     type: String,
+    default: null
   },
   expiryDate: {
     type: Date,

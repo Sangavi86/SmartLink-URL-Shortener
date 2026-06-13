@@ -7,34 +7,39 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Analytics from './pages/Analytics';
 import PublicStats from './pages/PublicStats';
 import NotFound from './pages/NotFound';
 import { useAuth } from './hooks/useAuth';
+import { ToastProvider } from './components/Toast';
 
 function App() {
   const { user, logout } = useAuth();
 
   return (
-    <Router>
-      <Navbar user={user} onLogout={logout} />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/stats/:shortCode" element={<PublicStats />} />
-        
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-        </Route>
+    <ToastProvider>
+      <Router>
+        <Navbar user={user} onLogout={logout} />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/stats/:shortCode" element={<PublicStats />} />
 
-        {/* Catch All */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </Router>
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/analytics/:shortCode" element={<Analytics />} />
+          </Route>
+
+          {/* Catch All */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </ToastProvider>
   );
 }
 

@@ -176,6 +176,24 @@ a:hover {
 .card:hover {
   border-color: var(--color-border-light);
   box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   Table Styles (Added Polish)
+   =========================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tbody tr {
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  transform: scale(1.005);
 }
 
 /* ===========================
@@ -196,6 +214,17 @@ a:hover {
   transition: all var(--transition-base);
   white-space: nowrap;
   text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-primary {
@@ -408,6 +437,44 @@ a:hover {
 .animate-fade-in { animation: fadeIn 0.4s ease both; }
 .animate-slide-in { animation: slideInLeft 0.4s ease both; }
 
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ===========================
+   Skeleton Loaders
+   =========================== */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+  background: var(--color-bg-elevated);
+  background-image: linear-gradient(to right, var(--color-bg-elevated) 0%, var(--color-border) 20%, var(--color-bg-elevated) 40%, var(--color-bg-elevated) 100%);
+  background-repeat: no-repeat;
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear forwards;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-text {
+  height: 1.25rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.skeleton-button {
+  height: 2.5rem;
+  width: 120px;
+  border-radius: var(--radius-md);
+}
+
 /* ===========================
    Responsive
    =========================== */
@@ -424,3 +491,286 @@ a:hover {
   h1 { font-size: var(--font-size-2xl); }
   .btn-lg { padding: var(--space-3) var(--space-6); font-size: var(--font-size-sm); }
 }
+
+/* ===========================
+   Page Transition Wrapper
+   =========================== */
+.page-enter {
+  animation: fadeIn 0.35s ease both;
+}
+
+/* ===========================
+   Stat Cards
+   =========================== */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  text-align: center;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  cursor: default;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow);
+  border-color: var(--color-primary);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-1);
+  display: block;
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ===========================
+   Modal Overlay & Animation
+   =========================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: overlayIn 0.2s ease both;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(108, 99, 255, 0.1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+/* ===========================
+   Toast Notifications
+   =========================== */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  pointer-events: all;
+  min-width: 260px;
+  max-width: 380px;
+  animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  box-shadow: var(--shadow-lg);
+}
+
+.toast.toast-exit {
+  animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(60px) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(60px) scale(0.95); }
+}
+
+.toast-success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.toast-error {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.toast-info {
+  background: rgba(108, 99, 255, 0.12);
+  border-color: rgba(108, 99, 255, 0.3);
+  color: var(--color-primary-light);
+}
+
+/* ===========================
+   Dashboard Specific
+   =========================== */
+.dashboard-header {
+  padding: var(--space-8) 0;
+}
+
+.url-table-row {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-fast);
+}
+
+.url-table-row:hover {
+  background-color: rgba(108, 99, 255, 0.04);
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  gap: var(--space-4);
+  animation: fadeIn 0.5s ease both;
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.empty-state h4 {
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+}
+
+.empty-state p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  max-width: 300px;
+}
+
+/* Skeleton Row */
+.skeleton-row {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border);
+  align-items: center;
+}
+
+/* ===========================
+   File Upload Drop Zone
+   =========================== */
+.drop-zone {
+  border: 2px dashed var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-10) var(--space-8);
+  text-align: center;
+  transition: border-color var(--transition-base), background-color var(--transition-base);
+  cursor: pointer;
+}
+
+.drop-zone:hover {
+  border-color: var(--color-primary);
+  background-color: rgba(108, 99, 255, 0.04);
+}
+
+/* ===========================
+   Input Disabled Polish
+   =========================== */
+.input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+}
+
+/* ===========================
+   Focus Ring Accessibility
+   =========================== */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
