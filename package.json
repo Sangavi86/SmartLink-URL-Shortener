@@ -1,0 +1,15 @@
+{
+  "name": "smartlink-url-shortener",
+  "version": "1.0.0",
+  "description": "Full-stack URL Shortener with Analytics for Hackathon",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
