@@ -16,12 +16,15 @@ connectDB();
 const authRoutes = require('./routes/authRoutes');
 const urlRoutes = require('./routes/urlRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const publicRoutes = require('./routes/publicRoutes');
 const { redirectToUrl } = require('./controllers/urlController');
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/urls', urlRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
+app.use('/api/v1/public', publicRoutes);
 app.get('/:shortCode', redirectToUrl);
+
 
 
 
