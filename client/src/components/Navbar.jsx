@@ -1,9 +1,15 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = ({ user, onLogout }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/');
+  };
 
   return (
     <nav className="navbar">
@@ -44,7 +50,7 @@ const Navbar = ({ user, onLogout }) => {
           {user ? (
             <>
               <span className="nav-user">👤 {user.username}</span>
-              <button onClick={onLogout} className="btn btn-ghost btn-sm">
+              <button onClick={handleLogout} className="btn btn-ghost btn-sm">
                 Logout
               </button>
             </>
