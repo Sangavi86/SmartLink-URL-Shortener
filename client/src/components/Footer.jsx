@@ -5,37 +5,18 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="footer">
-      <div className="container footer-inner">
-        <div className="footer-brand">
+    <footer className="footer" style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}>
+      <div className="container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-4)' }}>
+        <div className="footer-brand" style={{ marginBottom: 0 }}>
           <span className="footer-logo">⚡ Smart<span className="gradient-text">Link</span></span>
-          <p className="footer-tagline">Shorten. Share. Analyze.</p>
+          <p className="footer-tagline" style={{ fontSize: 'var(--font-size-xs)', margin: 0 }}>© {currentYear} SmartLink.</p>
         </div>
 
-        <div className="footer-links">
-          <div className="footer-col">
-            <h6 className="footer-heading">Product</h6>
-            <ul>
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/register">Get Started</Link></li>
-            </ul>
-          </div>
-          <div className="footer-col">
-            <h6 className="footer-heading">Account</h6>
-            <ul>
-              <li><Link to="/login">Login</Link></li>
-              <li><Link to="/register">Sign Up</Link></li>
-              <li><Link to="/profile">Profile</Link></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div className="footer-bottom">
-        <div className="container">
-          <p>© {currentYear} SmartLink. Built for hackathons. ⚡</p>
-        </div>
+        <nav style={{ display: 'flex', gap: 'var(--space-4)', fontSize: 'var(--font-size-sm)' }}>
+          <Link to="/dashboard" style={{ color: 'var(--color-text-muted)' }}>Dashboard</Link>
+          <Link to="/dashboard" style={{ color: 'var(--color-text-muted)' }}>Analytics</Link>
+          <Link to="/profile" style={{ color: 'var(--color-text-muted)' }}>Profile</Link>
+        </nav>
       </div>
     </footer>
   );
