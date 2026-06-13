@@ -280,12 +280,12 @@ const Dashboard = () => {
                         {url.qrCode ? '✅' : '➖'}
                       </td>
                       <td style={{ padding: 'var(--space-3)' }}>
-                        <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
-                          <Link to={`/analytics/${url.shortCode}`} className="btn btn-ghost btn-sm" title="Analytics" aria-label="View analytics">📊</Link>
-                          <button onClick={() => viewQrCode(url)} className="btn btn-ghost btn-sm" title="View QR Code" aria-label="View QR code">📷</button>
-                          <button onClick={() => copyToClipboard(url.shortCode)} className="btn btn-ghost btn-sm" title="Copy short URL" aria-label="Copy short URL">📋</button>
-                          <a href={`http://localhost:5001/${url.shortCode}`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm" title="Open Link" aria-label="Open short URL">🔗</a>
-                          <button onClick={() => handleDelete(url._id)} className="btn btn-ghost btn-sm" title="Delete" aria-label="Delete link" style={{ color: 'var(--color-error)' }}>🗑️</button>
+                        <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+                          <Link to={`/analytics/${url.shortCode}`} className="btn btn-ghost btn-sm pill-btn" title="Analytics" aria-label="View analytics">📊 Analytics</Link>
+                          <button onClick={() => viewQrCode(url)} className="btn btn-ghost btn-sm pill-btn" title="View QR Code" aria-label="View QR code">📱 View QR</button>
+                          <button onClick={() => copyToClipboard(url.shortCode)} className="btn btn-ghost btn-sm pill-btn" title="Copy short URL" aria-label="Copy short URL">📋 Copy</button>
+                          <a href={`http://localhost:5001/${url.shortCode}`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm pill-btn" title="Open Link" aria-label="Open short URL">🔗 Open</a>
+                          <button onClick={() => handleDelete(url._id)} className="btn btn-ghost btn-sm pill-btn" title="Delete" aria-label="Delete link" style={{ color: 'var(--color-error)' }}>🗑 Delete</button>
                         </div>
                       </td>
                     </tr>
