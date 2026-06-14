@@ -142,8 +142,7 @@ exports.createShortUrl = async (req, res, next) => {
     // Generate QR Code
     let qrCodeDataUrl = null;
     try {
-      const fullShortUrl = `${process.env.BASE_URL || 'http://localhost:5173'}/${shortCode}`; // Note: local test often uses 5173 for client or 5001 for server redirect. We'll use window.location.origin equivalent or just standard domain. Let's use relative path or configured base URL. Since this is just a redirect, 5001 is the actual redirect server.
-      const redirectUrl = `https://smartlink-url-shortener.onrender.com/${url.shortCode}`; 
+      const redirectUrl = `${process.env.BASE_URL || 'http://localhost:5001'}/${shortCode}`;
       // For production we'd use process.env.BASE_URL.
       qrCodeDataUrl = await qrcode.toDataURL(redirectUrl);
     } catch (qrErr) {
@@ -423,7 +422,7 @@ exports.bulkUploadUrls = async (req, res, next) => {
 
           let qrCodeDataUrl = null;
           try {
-            const redirectUrl = `https://smartlink-url-shortener.onrender.com/${url.shortCode}`;
+            const redirectUrl = `${process.env.BASE_URL || 'http://localhost:5001'}/${shortCode}`;
             qrCodeDataUrl = await qrcode.toDataURL(redirectUrl);
           } catch (e) {
             // ignore qr failure
